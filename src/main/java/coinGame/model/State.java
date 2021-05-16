@@ -1,5 +1,7 @@
 package coinGame.model;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
@@ -9,6 +11,8 @@ import java.util.stream.Collectors;
 
 public class State {
     private final ArrayList<Coin> coins;
+    public final ObjectProperty<Boolean> ended = new SimpleObjectProperty<>(false);
+    public final ObjectProperty<Integer> steps = new SimpleObjectProperty<>(0);
     State(int size)
     {
         this.coins = new ArrayList<>(size);
