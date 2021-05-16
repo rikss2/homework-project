@@ -1,5 +1,4 @@
 package coinGame;
-import javax.inject.Inject;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

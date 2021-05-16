@@ -3,7 +3,7 @@
         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>hu.unideb.inf</groupId>
-    <artifactId>homework-template-project</artifactId>
+    <artifactId>homework-project</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
     <description>Puzzle game implemented in JavaFX based on the Model-View-Controller (MVC) architectural pattern.</description>
@@ -100,6 +100,17 @@
             <artifactId>junit-jupiter-engine</artifactId>
             <version>${junit.jupiter.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>5.7.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>16</version>
         </dependency>
     </dependencies>
     <build>
