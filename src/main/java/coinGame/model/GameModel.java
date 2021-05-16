@@ -36,11 +36,24 @@ public class GameModel {
         return gameState.getCoins().get(coinNumber).positionProperty();
     }
 
+    public boolean moveable(int coinNumber){
+        boolean result = false;
+        Position position = gameState.getCoins().get(coinNumber).positionProperty().get();
+        Position nextPosition = position;
+        for (Direction direction : Direction.values())
+        {
+            nextPosition = position.moveTowards(direction);
+            if (!getCoinNumber(nextPosition).isEmpty()) result = true;
+        }
+        return result;
+    }
     public ArrayList<Position> getValidMoves(int coinNumber) {
         Position position = gameState.getCoins().get(coinNumber).positionProperty().get();
+        Position nextPosition = position;
         ArrayList<Position> validMoves = new ArrayList<>(BOARD_SIZE * BOARD_SIZE);
-        for (var direction : Direction.values()) {
-            Position nextPosition = position.moveTowards(direction);
+        if (!moveable(coinNumber)) return validMoves;
+        for (Direction direction : Direction.values()) {
+            nextPosition = position.moveTowards(direction);
             while (Position.isOnBoard(nextPosition) && getCoinNumber(nextPosition).isEmpty()) {
                 validMoves.add(nextPosition);
                 nextPosition = nextPosition.moveTowards(direction);
