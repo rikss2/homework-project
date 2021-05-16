@@ -13,11 +13,13 @@ import javafx.scene.control.Label;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
-import org.jdbi.v3.core.Jdbi;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * FXML Controller for {@code scoreBoard.fxml}.
+ */
 public class ScoreboardController {
     @FXML
     private Label LeaderBoardTitle;
@@ -32,13 +34,18 @@ public class ScoreboardController {
         int rank = 0;
         for (Player player : scores) {
             rank++;
-            scoreSpace.getChildren().add(new Text(rank + ". " + player.getName() + " with " + player.getSteps() + " points\n"));
+            scoreSpace.getChildren().add(new Text(rank + ". " + player.getName() + (player.isWon()?" won":" lost") +" with " + player.getSteps() + " points\n"));
         }
     }
 
     @FXML
     private Button backButton;
 
+    /**
+     * Changes the stage back to the menu.
+     * @param actionEvent this is an on Button click event
+     * @throws IOException
+     */
     public void backAction(ActionEvent actionEvent) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/fxml/opening.fxml"));

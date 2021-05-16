@@ -7,6 +7,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import org.tinylog.Logger;
+
+/**
+ * Starts the game.
+ */
 public class coinGameApplication extends Application{
     private final FXMLLoader fxmlLoader = new FXMLLoader();
 

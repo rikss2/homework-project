@@ -3,7 +3,6 @@ package coinGame.javafx.controller;
 import coinGame.jdbi.DataBaseManager;
 import coinGame.model.Position;
 import coinGame.model.GameModel;
-import javafx.beans.Observable;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,6 +24,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * FXML Controller for {@code game.fxml}.
+ */
 public class GameController {
     private enum SelectionPhase {
         SELECT_FROM,
@@ -43,6 +45,11 @@ public class GameController {
     private Position selected;
     private String playerName;
 
+
+    /**
+     * Sets the playerName.
+     * @param playerName stored value
+     */
     public void setPlayerName(String playerName) {
         this.playerName = playerName;
     }
@@ -60,6 +67,12 @@ public class GameController {
     @FXML
     private Button backButton;
 
+
+    /**
+     * Changes the stage back to the menu.
+     * @param actionEvent this is an on Button click event
+     * @throws IOException
+     */
     public void backAction(ActionEvent actionEvent) throws IOException {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("/fxml/opening.fxml"));
@@ -92,14 +105,19 @@ public class GameController {
     private void handleGameEnded(ObservableValue<? extends Boolean> observableValue, boolean oldValue, boolean newValue) {
         if (newValue) {
             Logger.info("Player {} has ended the game in {} steps", playerName, model.gameState.steps.get());
-            Logger.info("The game was {}", Won() ? "won" : "Lost");
+            boolean won = Won();
+            Logger.info("The game was {}", won ? "won" : "Lost");
             DataBaseManager dbm = new DataBaseManager();
             dbm.createTable();
-            dbm.addPlayer(playerName, model.gameState.steps.get());
+            dbm.addPlayer(playerName, model.gameState.steps.get(), won);
 
         }
     }
 
+    /**
+     * Returns whether the ending is Won or Lost.
+     * @return boolean
+     */
     public boolean Won() {
         for (Position position : GameModel.GOAL_POSITIONS) {
             if (model.getCoinNumber(position).isEmpty()) return false;
