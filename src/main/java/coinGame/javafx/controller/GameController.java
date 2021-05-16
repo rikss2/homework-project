@@ -2,8 +2,10 @@ package coinGame.javafx.controller;
 
 import coinGame.model.Position;
 import coinGame.model.GameModel;
+import javafx.beans.Observable;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -14,7 +16,7 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-public class gameController {
+public class GameController {
     private enum SelectionPhase {
         SELECT_FROM,
         SELECT_TO;
@@ -30,7 +32,17 @@ public class gameController {
     private SelectionPhase selectionPhase = SelectionPhase.SELECT_FROM;
     private List<Position> selectablePositions = new ArrayList<>();
     private Position selected;
+    private String playerName;
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
+    }
+
     private GameModel model = new GameModel();
+
+    @FXML
+    private Label StepsLabel;
+    @FXML
+    private Label stepCounterLabel;
 
     @FXML
     private GridPane board;
@@ -41,6 +53,7 @@ public class gameController {
         createPieces();
         setSelectablePositions();
         showSelectablePositions();
+        stepCounterLabel.textProperty().bind(model.gameState.steps.asString());
     }
 
     private void createBoard() {
@@ -50,6 +63,22 @@ public class gameController {
                 board.add(square, j, i);
             }
         }
+        model.gameState.ended.addListener(this::handleGameEnded);
+
+    }
+
+    private void handleGameEnded(ObservableValue<? extends Boolean> observableValue, boolean oldValue, boolean newValue) {
+        if (newValue) {
+            Logger.info("Player {} has ended the game in {} steps", playerName, model.gameState.steps.get());
+            Logger.info("The game was {}", Won()?"won":"Lost");
+
+        }
+    }
+    public boolean Won(){
+        for (Position position : model.GOAL_POSITIONS){
+            if (model.getCoinNumber(position).isEmpty()) return false;
+        }
+        return true;
     }
 
     private StackPane createSquare() {
@@ -74,6 +103,7 @@ public class gameController {
         StackPane newSquare = getSquare(newPosition);
         newSquare.getChildren().addAll(oldSquare.getChildren());
         oldSquare.getChildren().clear();
+        model.gameState.steps.set(model.gameState.steps.get()+1);
     }
 
     @FXML
@@ -101,6 +131,7 @@ public class gameController {
                     model.gameState.getCoins().get(coinNumber).moveTo(position);
                     deselectSelectedPosition();
                     alterSelectionPhase();
+
                 }
             }
         }
@@ -126,6 +157,7 @@ public class gameController {
                 selectablePositions.addAll(model.getValidMoves(pieceNumber));
             }
         }
+        if (selectablePositions.isEmpty()) model.gameState.ended.set(true);
     }
 
     private void deselectSelectedPosition() {

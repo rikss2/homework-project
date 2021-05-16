@@ -7,6 +7,7 @@ import java.util.*;
 public class GameModel {
     public static int BOARD_SIZE = 4;
     public static int COIN_QUANTITY = 4;
+    public static Position[] GOAL_POSITIONS = {new Position(0, 0), new Position(0, BOARD_SIZE), new Position(BOARD_SIZE, 0), new Position(BOARD_SIZE, BOARD_SIZE)};
 
     public State gameState;
 
@@ -36,17 +37,17 @@ public class GameModel {
         return gameState.getCoins().get(coinNumber).positionProperty();
     }
 
-    public boolean moveable(int coinNumber){
+    public boolean moveable(int coinNumber) {
         boolean result = false;
         Position position = gameState.getCoins().get(coinNumber).positionProperty().get();
         Position nextPosition = position;
-        for (Direction direction : Direction.values())
-        {
+        for (Direction direction : Direction.values()) {
             nextPosition = position.moveTowards(direction);
             if (!getCoinNumber(nextPosition).isEmpty()) result = true;
         }
         return result;
     }
+
     public ArrayList<Position> getValidMoves(int coinNumber) {
         Position position = gameState.getCoins().get(coinNumber).positionProperty().get();
         Position nextPosition = position;
