@@ -41,13 +41,16 @@ class GameModelTest {
         assertEquals(positionHashSet, new HashSet<Position>(gameModel.getValidMoves(0)));
 
         gameModel.gameState.getCoins().get(0).moveTo(new Position(0, 0));
-        positionHashSet.add(new Position(1, 0));
+        assertEquals( new HashSet<Position>(), new HashSet<Position>(gameModel.getValidMoves(0)));
+        positionHashSet.clear();
         positionHashSet.add(new Position(2, 0));
         positionHashSet.add(new Position(3, 0));
-        positionHashSet.add(new Position(0, 1));
-        positionHashSet.add(new Position(0, 2));
-        positionHashSet.add(new Position(0, 3));
-        assertEquals( positionHashSet, new HashSet<Position>(gameModel.getValidMoves(0)));
+        positionHashSet.add(new Position(1, 1));
+        positionHashSet.add(new Position(1, 2));
+        positionHashSet.add(new Position(1, 3));
+        gameModel.gameState.getCoins().get(1).moveTo(new Position(1, 0));
+        assertEquals( positionHashSet, new HashSet<Position>(gameModel.getValidMoves(1)));
+
     }
 
 
