@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 
 import org.tinylog.Logger;
 public class coinGameApplication extends Application{
-    private FXMLLoader fxmlLoader = new FXMLLoader();
+    private final FXMLLoader fxmlLoader = new FXMLLoader();
 
     @Override
     public void start(Stage stage) throws Exception {

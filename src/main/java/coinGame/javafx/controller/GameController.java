@@ -1,18 +1,27 @@
 package coinGame.javafx.controller;
 
+import coinGame.jdbi.DataBaseManager;
 import coinGame.model.Position;
 import coinGame.model.GameModel;
 import javafx.beans.Observable;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
 import org.tinylog.Logger;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,14 +39,15 @@ public class GameController {
     }
 
     private SelectionPhase selectionPhase = SelectionPhase.SELECT_FROM;
-    private List<Position> selectablePositions = new ArrayList<>();
+    private final List<Position> selectablePositions = new ArrayList<>();
     private Position selected;
     private String playerName;
+
     public void setPlayerName(String playerName) {
         this.playerName = playerName;
     }
 
-    private GameModel model = new GameModel();
+    private final GameModel model = new GameModel();
 
     @FXML
     private Label StepsLabel;
@@ -46,6 +56,18 @@ public class GameController {
 
     @FXML
     private GridPane board;
+
+    @FXML
+    private Button backButton;
+
+    public void backAction(ActionEvent actionEvent) throws IOException {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("/fxml/opening.fxml"));
+            Parent root = fxmlLoader.load();
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+    }
 
     @FXML
     private void initialize() {
@@ -70,12 +92,16 @@ public class GameController {
     private void handleGameEnded(ObservableValue<? extends Boolean> observableValue, boolean oldValue, boolean newValue) {
         if (newValue) {
             Logger.info("Player {} has ended the game in {} steps", playerName, model.gameState.steps.get());
-            Logger.info("The game was {}", Won()?"won":"Lost");
+            Logger.info("The game was {}", Won() ? "won" : "Lost");
+            DataBaseManager dbm = new DataBaseManager();
+            dbm.createTable();
+            dbm.addPlayer(playerName, model.gameState.steps.get());
 
         }
     }
-    public boolean Won(){
-        for (Position position : model.GOAL_POSITIONS){
+
+    public boolean Won() {
+        for (Position position : GameModel.GOAL_POSITIONS) {
             if (model.getCoinNumber(position).isEmpty()) return false;
         }
         return true;
@@ -89,7 +115,7 @@ public class GameController {
     }
 
     private void createPieces() {
-        for (int i = 0; i < model.COIN_QUANTITY; i++) {
+        for (int i = 0; i < GameModel.COIN_QUANTITY; i++) {
             model.positionProperty(i).addListener(this::piecePositionChange);
             var coin = new Circle(25);
             coin.setFill(Color.BLACK);
@@ -103,11 +129,12 @@ public class GameController {
         StackPane newSquare = getSquare(newPosition);
         newSquare.getChildren().addAll(oldSquare.getChildren());
         oldSquare.getChildren().clear();
-        model.gameState.steps.set(model.gameState.steps.get()+1);
+        model.gameState.steps.set(model.gameState.steps.get() + 1);
     }
 
     @FXML
     private void handleMouseClick(MouseEvent event) {
+        if (model.gameState.ended.get()) return;
         var square = (StackPane) event.getSource();
         var row = GridPane.getRowIndex(square);
         var col = GridPane.getColumnIndex(square);
@@ -148,7 +175,7 @@ public class GameController {
         selectablePositions.clear();
         switch (selectionPhase) {
             case SELECT_FROM -> {
-                for (int i = 0; i < model.COIN_QUANTITY; i++) {
+                for (int i = 0; i < GameModel.COIN_QUANTITY; i++) {
                     if (model.moveable(i)) selectablePositions.add(model.positionProperty(i).get());
                 }
             }

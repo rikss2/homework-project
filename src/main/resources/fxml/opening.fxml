@@ -39,6 +39,7 @@
                   <Label fx:id="errorLabel" alignment="CENTER" layoutX="282.0" layoutY="62.0" />
                </children>
             </Pane>
+            <Button fx:id="scoreboard" mnemonicParsing="false" onAction="#toScoreboard" text="Scoreboard" />
          </children></VBox>
    </children>
 </AnchorPane>

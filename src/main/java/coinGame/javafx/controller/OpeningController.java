@@ -43,4 +43,15 @@ public class OpeningController {
             Logger.info("The user's name is set to {}, loading game scene", playerName.getText()); // TODO
         }
     }
+    @FXML
+    private Button scoreboard;
+    public void toScoreboard(ActionEvent actionEvent) throws IOException {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("/fxml/scoreBoard.fxml"));
+            Parent root = fxmlLoader.load();
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+
+    }
 }

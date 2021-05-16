@@ -42,6 +42,7 @@
                         <Font size="20.0" />
                      </font>
                   </Label>
+                  <Button fx:id="backButton" layoutX="47.0" layoutY="255.0" mnemonicParsing="false" onAction="#backAction" text="Back to menu" />
                </children></AnchorPane>
          </items>
       </SplitPane>
