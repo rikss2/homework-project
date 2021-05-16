@@ -13,9 +13,9 @@ public class coinGameApplication extends Application{
     @Override
     public void start(Stage stage) throws Exception {
         Logger.info("Starting application");
-        fxmlLoader.setLocation(getClass().getResource("/fxml/game.fxml"));
+        fxmlLoader.setLocation(getClass().getResource("/fxml/opening.fxml"));
         Parent root = fxmlLoader.load();
-        stage.setTitle("Puzzle");
+        stage.setTitle("Board Game");
         stage.setResizable(false);
         stage.setScene(new Scene(root));
         stage.show();
