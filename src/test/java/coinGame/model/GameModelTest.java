@@ -63,4 +63,12 @@ class GameModelTest {
         String expected = "[(0,0),(1,2),(2,1),(2,2)]";
         assertEquals(expected, gameModel.toString());
     }
+
+    @Test
+    void moveable() {
+        GameModel gameModel = new GameModel();
+        assertTrue(gameModel.moveable(0));
+        gameModel.gameState.getCoins().get(0).moveTo(new Position(0, 0));
+        assertFalse(gameModel.moveable(0));
+    }
 }
